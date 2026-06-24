@@ -1,0 +1,80 @@
+{
+  "botName": "BankingSupportBot",
+  "description": "Lex bot for banking customer support with OTP verification",
+  "dataPrivacy": {
+    "childDirected": false
+  },
+  "idleSessionTTLInSeconds": 300,
+  "intents": [
+    {
+      "name": "SendOTP",
+      "description": "Sends OTP to customer's registered phone number",
+      "sampleUtterances": [
+        "I want to verify my identity",
+        "Send me an OTP",
+        "Verify my account"
+      ],
+      "slots": [
+        {
+          "name": "PhoneNumber",
+          "slotTypeName": "AMAZON.PhoneNumber",
+          "valueElicitationPrompt": "Please provide your registered phone number."
+        }
+      ],
+      "fulfillmentCodeHook": {
+        "enabled": true,
+        "lambdaArn": "arn:aws:lambda:us-east-1:123456789012:function:otp_verification"
+      }
+    },
+    {
+      "name": "VerifyOTP",
+      "description": "Verifies the OTP entered by the customer",
+      "sampleUtterances": [
+        "My code is {OTPCode}",
+        "Verify {OTPCode}",
+        "The OTP is {OTPCode}"
+      ],
+      "slots": [
+        {
+          "name": "PhoneNumber",
+          "slotTypeName": "AMAZON.PhoneNumber",
+          "valueElicitationPrompt": "Please confirm your phone number."
+        },
+        {
+          "name": "OTPCode",
+          "slotTypeName": "AMAZON.Number",
+          "valueElicitationPrompt": "Please enter the 6-digit code sent to your phone."
+        }
+      ],
+      "fulfillmentCodeHook": {
+        "enabled": true,
+        "lambdaArn": "arn:aws:lambda:us-east-1:123456789012:function:otp_verification"
+      }
+    },
+    {
+      "name": "CheckAccountBalance",
+      "description": "Validates account and returns balance after OTP verification",
+      "sampleUtterances": [
+        "What is my account balance",
+        "Check my balance",
+        "Validate my account {AccountNumber}"
+      ],
+      "slots": [
+        {
+          "name": "AccountNumber",
+          "slotTypeName": "AMAZON.Number",
+          "valueElicitationPrompt": "Please provide your account number."
+        }
+      ],
+      "fulfillmentCodeHook": {
+        "enabled": true,
+        "lambdaArn": "arn:aws:lambda:us-east-1:123456789012:function:account_validation"
+      }
+    },
+    {
+      "name": "FallbackIntent",
+      "parentIntentSignature": "AMAZON.FallbackIntent",
+      "description": "Default intent when no other intent matches"
+    }
+  ]
+}
