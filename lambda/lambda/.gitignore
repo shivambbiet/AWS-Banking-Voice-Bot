@@ -1,0 +1,7 @@
+*.pyc
+__pycache__/
+.env
+*.zip
+.aws/
+credentials.json
+.DS_Store
